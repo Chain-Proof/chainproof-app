@@ -46,17 +46,6 @@ function TokenDetails({ token }: TokenDetailsProps) {
     ? 'text-red-400'
     : 'text-gray-400';
 
-  const getClassificationType = (classification: { utilityScore: number; memeScore: number; } | undefined) => {
-    if (!classification) return 'N/A';
-    if (classification.utilityScore > classification.memeScore) {
-      return 'UTILITY';
-    }
-    if (classification.memeScore > classification.utilityScore) {
-      return 'MEME';
-    }
-    return 'UNCATEGORIZED';
-  };
-
   return (
     <div className="text-white bg-transparent">
       <Navbar />
@@ -169,7 +158,7 @@ function TokenDetails({ token }: TokenDetailsProps) {
       {/* Classification Card */}
       <div className="mt-10 border border-white rounded-2xl p-6 shadow-sm">
         <h3 className="text-lg font-semibold mb-4">Classification</h3>
-        <div className="text-2xl font-bold text-white">{getClassificationType(token.classification)}</div>
+        <div className="text-2xl font-bold text-white">{token.classification?.type || 'N/A'}</div>
         <div className="text-sm text-gray-300">Utility: {token.classification?.utilityScore}%</div>
         <div className="text-sm text-gray-300">Meme: {token.classification?.memeScore}%</div>
       </div>

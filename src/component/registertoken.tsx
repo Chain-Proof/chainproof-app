@@ -38,7 +38,7 @@ export const RegisterToken: React.FC = () => {
     try {
       console.log('🔍 Analyzing token:', mint);
 
-      const response = await fetch('http://localhost:3000/api/mu-checker/prepare-registration', {
+      const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/mu-checker/prepare-registration`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

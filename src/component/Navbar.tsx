@@ -6,7 +6,10 @@ function Navbar() {
       <div className="text-white text-xl">
         <Link to="/">ChainProof</Link>
       </div>
-      <div>
+      <div className="flex gap-6">
+        <Link to="/send" className="text-white hover:text-gray-300">
+          Send
+        </Link>
         <Link to="/register-token" className="text-white hover:text-gray-300">
           Register Token
         </Link>

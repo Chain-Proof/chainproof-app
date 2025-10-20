@@ -44,7 +44,7 @@ function TokenPage() {
     const fetchTokenData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:3000/api/mu-checker/full-analysis`, {
+        const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/mu-checker/full-analysis`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

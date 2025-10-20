@@ -4,12 +4,6 @@ import tokens from './tokens/token.json';
 import { useNavigate } from 'react-router-dom';
 import { getProgram } from '../chainproofconnect/useProgram';
 
-interface Token {
-  name: string;
-  symbol: string;
-  address: string;
-}
-
 interface AnalysisResult {
   success: boolean;
   tokenAddress: string;
@@ -33,7 +27,7 @@ interface AnalysisResult {
 function Main() {
   const [tokenData, setTokenData] = useState<AnalysisResult[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, ] = useState('');
   const [searchAddress, setSearchAddress] = useState('');
   const [analysisType, setAnalysisType] = useState('full-analysis');
   const navigate = useNavigate();
@@ -98,7 +92,7 @@ function Main() {
     const fetchTokenData = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:3000/api/mu-checker/batch-full-analysis', {
+        const response = await fetch(`${import.meta.env.VITE_SERVER_URL}/api/mu-checker/batch-full-analysis`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -135,17 +129,6 @@ function Main() {
       publicKey: token.publicKey.toString(),
     };
     navigate(`/verified-token/${serializableToken.account.mint}`, { state: { token: serializableToken } });
-  };
-
-  const getClassificationType = (classification: { type: string; utilityScore: number; memeScore: number; } | undefined) => {
-    if (!classification) return 'N/A';
-    if (classification.utilityScore > classification.memeScore) {
-      return 'UTILITY';
-    }
-    if (classification.memeScore > classification.utilityScore) {
-      return 'MEME';
-    }
-    return 'UNCATEGORIZED';
   };
 
   const filteredTokens = tokenData.filter(token => 
@@ -236,7 +219,7 @@ function Main() {
                         }}
                       />
                       <span className="text-base">{token.tokenInfo?.name}</span>
-                      <span className="ml-auto text-base font-medium">{getClassificationType(token.classification)}</span>
+                      <span className="ml-auto text-base font-medium">{token.classification?.type || 'N/A'}</span>
                     </li>
                   ))}
                 </ul>
@@ -274,7 +257,7 @@ function Main() {
                           />
                           <span className="text-base">{token.tokenInfo?.name}</span>
                         </td>
-                        <td className="p-2 text-base">{getClassificationType(token.classification)}</td>
+                        <td className="p-2 text-base">{token.classification?.type || 'N/A'}</td>
                         <td className="p-2 text-base font-medium">{token.riskAssessment?.riskLevel}</td>
                       </tr>
                     ))}
