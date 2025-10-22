@@ -141,21 +141,21 @@ export const RegisterToken: React.FC = () => {
   };
 
   return (
-    <div className="bg-black text-white min-h-screen">
+    <div className="text-white min-h-screen" style={{ backgroundColor: '#0e0d13' }}>
       <Navbar />
       <div className="flex flex-col items-center justify-center py-12 px-4">
-        <div className="w-full max-w-2xl p-8 space-y-8 border border-white rounded-lg">
-          <div className="flex justify-center">
+        <div className="w-full max-w-2xl p-6 space-y-6 rounded-lg" style={{ backgroundColor: '#181824', borderColor: '#252538ff', borderWidth: '1px' }}>
+          <div className="flex justify-center pb-4" style={{ borderBottomColor: '#252538ff', borderBottomWidth: '1px' }}>
             <WalletMultiButton />
           </div>
 
-          <h2 className="text-3xl font-bold text-center">Register a New Token</h2>
+          <h2 className="text-2xl font-bold text-center">Register a New Token</h2>
 
           {/* Step 1: Enter Mint Address */}
           {!tokenData && (
             <form onSubmit={handleAnalyze} className="space-y-6">
               <div>
-                <label htmlFor="mint" className="block text-sm font-medium mb-2">
+                <label htmlFor="mint" className="block text-sm mb-2" style={{ color: '#6b7280' }}>
                   Token Mint Address
                 </label>
                 <input
@@ -165,9 +165,10 @@ export const RegisterToken: React.FC = () => {
                   onChange={(e) => setMint(e.target.value)}
                   required
                   placeholder="Enter Solana token mint address..."
-                  className="w-full px-4 py-3 text-white bg-transparent border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-4 py-3 text-white rounded-lg outline-none"
+                  style={{ backgroundColor: '#0e0d13' }}
                 />
-                <p className="mt-2 text-xs text-gray-400">
+                <p className="mt-2 text-xs" style={{ color: '#6b7280' }}>
                   We'll analyze this token and generate metadata automatically
                 </p>
               </div>
@@ -175,7 +176,10 @@ export const RegisterToken: React.FC = () => {
               <button
                 type="submit"
                 disabled={isAnalyzing || !mint}
-                className="w-full px-4 py-3 font-bold text-white border border-white rounded-md hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="w-full px-4 py-3 font-bold text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
+                style={{ borderColor: '#35da9a', borderWidth: '1px', backgroundColor: 'transparent' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(53, 218, 154, 0.1)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
               >
                 {isAnalyzing ? (
                   <span className="flex items-center justify-center">
@@ -186,7 +190,7 @@ export const RegisterToken: React.FC = () => {
                     Analyzing Token...
                   </span>
                 ) : (
-                  'Proceed'
+                  'Analyze Token'
                 )}
               </button>
             </form>
@@ -195,65 +199,66 @@ export const RegisterToken: React.FC = () => {
           {/* Step 2: Preview Token Data */}
           {tokenData && (
             <div className="space-y-6">
-              <div className="p-6 border border-gray-700 rounded-lg bg-gray-900">
-                <h3 className="text-xl font-bold mb-4 text-center">Token Information</h3>
+              <div className="p-4 rounded-lg" style={{ backgroundColor: '#0e0d13' }}>
+                <h3 className="text-lg font-bold mb-4 text-center">Token Information</h3>
 
                 <div className="flex items-center justify-center mb-6">
                   {tokenData.icon ? (
                     <img
                       src={tokenData.icon}
                       alt={tokenData.symbol}
-                      className="w-16 h-16 rounded-full border-2 border-white"
+                      className="w-16 h-16 rounded-full"
                     />
                   ) : (
-                    <div className="w-16 h-16 rounded-full border-2 border-gray-600 flex items-center justify-center bg-gray-800">
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center" style={{ backgroundColor: '#181824' }}>
                       <span className="text-2xl font-bold">{tokenData.symbol.charAt(0)}</span>
                     </div>
                   )}
                 </div>
 
                 <div className="space-y-3">
-                  <div className="flex justify-between border-b border-gray-700 pb-2">
-                    <span className="text-gray-400">Name:</span>
-                    <span className="font-semibold">{tokenData.name}</span>
+                  <div className="flex justify-between pb-2" style={{ borderBottomColor: '#252538ff', borderBottomWidth: '1px' }}>
+                    <span className="text-sm" style={{ color: '#6b7280' }}>Name</span>
+                    <span className="text-sm font-medium">{tokenData.name}</span>
                   </div>
 
-                  <div className="flex justify-between border-b border-gray-700 pb-2">
-                    <span className="text-gray-400">Symbol:</span>
-                    <span className="font-semibold">{tokenData.symbol}</span>
+                  <div className="flex justify-between pb-2" style={{ borderBottomColor: '#252538ff', borderBottomWidth: '1px' }}>
+                    <span className="text-sm" style={{ color: '#6b7280' }}>Symbol</span>
+                    <span className="text-sm font-medium">{tokenData.symbol}</span>
                   </div>
 
-                  <div className="flex justify-between border-b border-gray-700 pb-2">
-                    <span className="text-gray-400">Mint:</span>
+                  <div className="flex justify-between pb-2" style={{ borderBottomColor: '#252538ff', borderBottomWidth: '1px' }}>
+                    <span className="text-sm" style={{ color: '#6b7280' }}>Mint</span>
                     <span className="font-mono text-xs">{tokenData.mint.slice(0, 8)}...{tokenData.mint.slice(-8)}</span>
                   </div>
 
-                  <div className="flex justify-between border-b border-gray-700 pb-2">
-                    <span className="text-gray-400">Risk Level:</span>
-                    <span className={`font-semibold px-3 py-1 rounded border ${getRiskColor(tokenData.riskLevel)}`}>
+                  <div className="flex justify-between pb-2" style={{ borderBottomColor: '#252538ff', borderBottomWidth: '1px' }}>
+                    <span className="text-sm" style={{ color: '#6b7280' }}>Risk Level</span>
+                    <span className={`text-sm font-semibold ${getRiskColor(tokenData.riskLevel).split(' ')[0]}`}>
                       {tokenData.riskLevel}
                     </span>
                   </div>
 
-                  <div className="flex justify-between border-b border-gray-700 pb-2">
-                    <span className="text-gray-400">Risk Score:</span>
-                    <span className="font-semibold">{tokenData.riskScore}/100</span>
+                  <div className="flex justify-between pb-2" style={{ borderBottomColor: '#252538ff', borderBottomWidth: '1px' }}>
+                    <span className="text-sm" style={{ color: '#6b7280' }}>Risk Score</span>
+                    <span className="text-sm font-medium">{tokenData.riskScore}/100</span>
                   </div>
 
-                  <div className="flex justify-between border-b border-gray-700 pb-2">
-                    <span className="text-gray-400">Classification:</span>
-                    <span className={`font-semibold px-3 py-1 rounded border ${getClassificationColor(tokenData.classification)}`}>
+                  <div className="flex justify-between pb-2" style={{ borderBottomColor: '#252538ff', borderBottomWidth: '1px' }}>
+                    <span className="text-sm" style={{ color: '#6b7280' }}>Classification</span>
+                    <span className={`text-sm font-semibold ${getClassificationColor(tokenData.classification).split(' ')[0]}`}>
                       {tokenData.classification}
                     </span>
                   </div>
 
-                  <div className="flex justify-between border-b border-gray-700 pb-2">
-                    <span className="text-gray-400">IPFS Hash:</span>
+                  <div className="flex justify-between">
+                    <span className="text-sm" style={{ color: '#6b7280' }}>IPFS Hash</span>
                     <a
                       href={tokenData.gatewayUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-mono text-xs text-blue-400 hover:underline"
+                      className="font-mono text-xs hover:underline"
+                      style={{ color: '#35da9a' }}
                     >
                       {tokenData.ipfsHash.slice(0, 8)}...{tokenData.ipfsHash.slice(-8)}
                     </a>
@@ -268,7 +273,8 @@ export const RegisterToken: React.FC = () => {
                     setMessage('');
                     setError('');
                   }}
-                  className="flex-1 px-4 py-3 font-bold text-white border border-gray-600 rounded-md hover:bg-gray-800 transition-colors"
+                  className="flex-1 px-4 py-3 font-bold text-white rounded-lg transition hover:opacity-80"
+                  style={{ backgroundColor: '#282924' }}
                 >
                   Cancel
                 </button>
@@ -276,7 +282,10 @@ export const RegisterToken: React.FC = () => {
                 <button
                   onClick={handleRegister}
                   disabled={isRegistering}
-                  className="flex-1 px-4 py-3 font-bold text-white bg-indigo-600 border border-indigo-600 rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="flex-1 px-4 py-3 font-bold text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
+                  style={{ borderColor: '#35da9a', borderWidth: '1px', backgroundColor: 'transparent' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(53, 218, 154, 0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 >
                   {isRegistering ? (
                     <span className="flex items-center justify-center">
@@ -296,14 +305,14 @@ export const RegisterToken: React.FC = () => {
 
           {/* Success/Error Messages */}
           {message && (
-            <div className="p-4 border border-green-500 bg-green-900/20 rounded-md">
-              <p className="text-green-400 text-center">{message}</p>
+            <div className="p-4 rounded-lg" style={{ backgroundColor: '#0e0d13', borderColor: '#35da9a', borderWidth: '1px' }}>
+              <p className="text-center" style={{ color: '#35da9a' }}>{message}</p>
             </div>
           )}
 
           {error && (
-            <div className="p-4 border border-red-500 bg-red-900/20 rounded-md">
-              <p className="text-red-400 text-center">{error}</p>
+            <div className="p-4 rounded-lg" style={{ backgroundColor: '#0e0d13', borderColor: '#ef4444', borderWidth: '1px' }}>
+              <p className="text-center text-red-400">{error}</p>
             </div>
           )}
         </div>

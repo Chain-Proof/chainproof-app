@@ -253,14 +253,14 @@ function Send() {
   const selectedTokenData = tokens.find((t) => t.mint === selectedToken);
 
   return (
-    <div className=" min-h-screen text-white">
+    <div className="min-h-screen text-white" style={{ backgroundColor: '#0e0d13' }}>
       <Navbar />
       <div className="max-w-2xl mx-auto px-4 py-8">
-        <div className="border border-white rounded-xl p-6 space-y-6">
+        <div className="rounded-lg p-6 space-y-6" style={{ backgroundColor: '#181824', borderColor: '#252538ff', borderWidth: '1px' }}>
           <h1 className="text-2xl font-bold">Send Token</h1>
 
           {/* Wallet Connection */}
-          <div className="flex justify-between items-center border-b border-gray-700 pb-4">
+          <div className="flex justify-between items-center pb-4" style={{ borderBottomColor: '#252538ff', borderBottomWidth: '1px' }}>
             <span className="text-lg">Wallet:</span>
             <WalletMultiButton />
           </div>
@@ -269,9 +269,10 @@ function Send() {
             <>
               {/* Token Selection */}
               <div>
-                <label className="block text-sm mb-2">Select Token</label>
+                <label className="block text-sm mb-2" style={{ color: '#6b7280' }}>Select Token</label>
                 <select
-                  className="w-full bg-gray-800 p-3 rounded-lg text-white"
+                  className="w-full p-3 rounded-lg text-white outline-none"
+                  style={{ backgroundColor: '#0e0d13' }}
                   value={selectedToken}
                   onChange={(e) => setSelectedToken(e.target.value)}
                   disabled={loading}
@@ -289,10 +290,11 @@ function Send() {
 
               {/* Recipient Address */}
               <div>
-                <label className="block text-sm mb-2">Recipient Address</label>
+                <label className="block text-sm mb-2" style={{ color: '#6b7280' }}>Recipient Address</label>
                 <input
                   type="text"
-                  className="w-full bg-gray-800 p-3 rounded-lg text-white"
+                  className="w-full p-3 rounded-lg text-white outline-none"
+                  style={{ backgroundColor: '#0e0d13' }}
                   placeholder="Enter recipient wallet address"
                   value={recipientAddress}
                   onChange={(e) => setRecipientAddress(e.target.value)}
@@ -301,17 +303,18 @@ function Send() {
 
               {/* Amount */}
               <div>
-                <label className="block text-sm mb-2">Amount</label>
+                <label className="block text-sm mb-2" style={{ color: '#6b7280' }}>Amount</label>
                 <input
                   type="number"
-                  className="w-full bg-gray-800 p-3 rounded-lg text-white"
+                  className="w-full p-3 rounded-lg text-white outline-none"
+                  style={{ backgroundColor: '#0e0d13' }}
                   placeholder="0.00"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   step="0.000001"
                 />
                 {selectedTokenData && (
-                  <p className="text-sm text-gray-400 mt-1">
+                  <p className="text-sm mt-1" style={{ color: '#6b7280' }}>
                     Available: {selectedTokenData.uiAmount?.toFixed(6)} {selectedTokenData.symbol}
                   </p>
                 )}
@@ -319,7 +322,10 @@ function Send() {
 
               {/* Send Button */}
               <button
-                className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg disabled:bg-gray-600 disabled:cursor-not-allowed"
+                className="w-full text-white font-bold py-3 px-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition duration-200"
+                style={{ borderColor: '#35da9a', borderWidth: '1px', backgroundColor: 'transparent' }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(53, 218, 154, 0.1)'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                 onClick={handleSendClick}
                 disabled={!selectedToken || !recipientAddress || !amount || analyzing}
               >
@@ -335,16 +341,16 @@ function Send() {
 
         {/* Confirmation Popup */}
         {showConfirm && (
-          <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-4 z-50">
-            <div className="bg-gray-900 border border-white rounded-xl p-6 max-w-md w-full space-y-4">
+          <div className="fixed inset-0 flex items-center justify-center p-4 z-50" style={{ backdropFilter: 'blur(8px)', backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+            <div className="rounded-lg p-6 max-w-md w-full space-y-4" style={{ backgroundColor: '#181824', borderColor: '#252538ff', borderWidth: '1px' }}>
               <h2 className="text-xl font-bold">Confirm Transaction</h2>
 
               {/* Token Analysis */}
               {selectedToken !== 'SOL' && analysis?.success && (
-                <div className="border border-gray-700 rounded-lg p-4 space-y-2">
+                <div className="rounded-lg p-4 space-y-2" style={{ borderColor: '#252538ff', borderWidth: '1px' }}>
                   <h3 className="font-semibold">Token Analysis</h3>
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Safety:</span>
+                    <span style={{ color: '#6b7280' }}>Safety:</span>
                     <span
                       className={
                         analysis.riskAssessment?.riskLevel === 'SAFE'
@@ -358,24 +364,24 @@ function Send() {
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-400">Type:</span>
+                    <span style={{ color: '#6b7280' }}>Type:</span>
                     <span>{analysis.classification?.type || 'Unknown'}</span>
                   </div>
                 </div>
               )}
 
               {/* Transaction Details */}
-              <div className="border border-gray-700 rounded-lg p-4 space-y-2">
+              <div className="rounded-lg p-4 space-y-2" style={{ borderColor: '#252538ff', borderWidth: '1px' }}>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Token:</span>
+                  <span style={{ color: '#6b7280' }}>Token:</span>
                   <span>{selectedTokenData?.symbol}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Amount:</span>
+                  <span style={{ color: '#6b7280' }}>Amount:</span>
                   <span>{amount}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">To:</span>
+                  <span style={{ color: '#6b7280' }}>To:</span>
                   <span className="text-xs">
                     {recipientAddress.slice(0, 4)}...{recipientAddress.slice(-4)}
                   </span>
@@ -385,7 +391,8 @@ function Send() {
               {/* Buttons */}
               <div className="flex gap-3">
                 <button
-                  className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg"
+                  className="flex-1 text-white font-bold py-2 px-4 rounded-lg transition duration-200 hover:bg-gray-700"
+                  style={{ backgroundColor: '#282924' }}
                   onClick={() => {
                     setShowConfirm(false);
                     setAnalysis(null);
@@ -395,7 +402,10 @@ function Send() {
                   Cancel
                 </button>
                 <button
-                  className="flex-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg disabled:bg-gray-600"
+                  className="flex-1 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-50 transition duration-200"
+                  style={{ borderColor: '#35da9a', borderWidth: '1px', backgroundColor: 'transparent' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(53, 218, 154, 0.1)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                   onClick={handleConfirmSend}
                   disabled={sending}
                 >

@@ -65,15 +65,20 @@ function TokenPage() {
   }, [address]);
 
   return (
-    <div className="bg-black min-h-screen text-white p-6">
+    <div className="min-h-screen text-white" style={{ backgroundColor: '#0e0d13' }}>
       {loading ? (
-        <p className="text-lg">Loading...</p>
-      ) : token ? (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <TokenDetails token={token} />
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-gray-700 rounded-full"></div>
+            <div className="w-16 h-16 border-4 border-t-transparent rounded-full animate-spin absolute top-0" style={{ borderTopColor: '#35da9a', borderRightColor: '#35da9a', borderBottomColor: '#35da9a' }}></div>
+          </div>
         </div>
+      ) : token ? (
+        <TokenDetails token={token} />
       ) : (
-        <p className="text-lg">Token not found.</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <p className="text-lg">Token not found.</p>
+        </div>
       )}
     </div>
   );

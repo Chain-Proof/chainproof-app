@@ -1,18 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
-import { FaTwitter, FaGlobe, FaArrowLeft } from 'react-icons/fa';
+import { FaTwitter, FaGlobe, FaArrowLeft, FaCheckCircle, FaCopy, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 export const VerifiedTokenDetails: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { token } = location.state || {};
+  const [showMetadata, setShowMetadata] = useState(false);
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
 
   if (!token) {
     return (
-      <div className="bg-black min-h-screen text-white">
+      <div className="min-h-screen text-white" style={{ backgroundColor: '#0e0d13' }}>
         <Navbar />
-        <div className="p-8 max-w-4xl mx-auto">
+        <div className="p-8 max-w-7xl mx-auto">
           <button onClick={() => navigate(-1)} className="flex items-center gap-2 mb-4 text-gray-400 hover:text-white transition">
             <FaArrowLeft />
             Back
@@ -35,17 +40,17 @@ export const VerifiedTokenDetails: React.FC = () => {
     : 'text-gray-400';
 
   return (
-    <div className="bg-black min-h-screen text-white">
+    <div className="min-h-screen text-white" style={{ backgroundColor: '#0e0d13' }}>
       <Navbar />
-      <div className="p-8 max-w-5xl mx-auto">
-        <button onClick={() => navigate(-1)} className="flex items-center gap-2 mb-6 text-gray-400 hover:text-white transition">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <button onClick={() => navigate(-1)} className="flex items-center gap-2 mb-4 text-gray-400 hover:text-white transition">
           <FaArrowLeft />
           Back
         </button>
 
         {/* Header Section */}
-        <div className="flex items-center mb-8">
-          <div className="w-24 h-24 rounded-full border-2 border-white flex items-center justify-center overflow-hidden mr-6">
+        <div className="flex items-center mb-6">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center overflow-hidden mr-4">
             {ipfsData?.tokenInfo?.icon ? (
               <img
                 src={ipfsData.tokenInfo.icon}
@@ -57,8 +62,13 @@ export const VerifiedTokenDetails: React.FC = () => {
             )}
           </div>
           <div>
-            <h1 className="text-4xl font-bold">{ipfsData?.tokenInfo?.name || account.name}</h1>
-            <div className="flex items-center gap-4 mt-2 text-gray-400">
+            <div className="flex items-center gap-2">
+              <h1 className="text-3xl font-bold">{ipfsData?.tokenInfo?.name || account.name}</h1>
+              <FaCheckCircle className="text-xl" style={{ color: '#35da9a' }} />
+              <span className="text-sm px-2 py-1 rounded" style={{ backgroundColor: '#181824', color: '#35da9a' }}>Verified</span>
+            </div>
+            <div className="flex items-center gap-4 mt-2 text-sm" style={{ color: '#6b7280' }}>
+              <span>socials:</span>
               {ipfsData?.tokenInfo?.website && (
                 <a href={ipfsData.tokenInfo.website} target="_blank" rel="noreferrer" className="flex items-center hover:text-white transition">
                   <FaGlobe className="mr-1" /> Website
@@ -73,50 +83,102 @@ export const VerifiedTokenDetails: React.FC = () => {
           </div>
         </div>
 
-        {/* Two-Column Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Left Box: Risk Score & Classification */}
-          <div className="space-y-8">
-            <div className="border border-white rounded-2xl p-6 text-center shadow-lg">
-              <div className="flex justify-between text-gray-300 text-sm mb-3">
-                <span>Risk Score</span>
-                <span>{ipfsData?.riskAssessment?.riskScore ?? '--'}/100</span>
+        {/* Explorer Cards */}
+        <div className="space-y-4">
+          {/* Overview Card */}
+          <div className="rounded-lg p-4" style={{ backgroundColor: '#181824', borderColor: '#252538ff', borderWidth: '1px' }}>
+            <h3 className="text-lg font-bold mb-3">Overview</h3>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center pb-2" style={{ borderBottomColor: '#252538ff', borderBottomWidth: '1px' }}>
+                <span className="text-sm" style={{ color: '#6b7280' }}>Risk Assessment</span>
+                <div className="flex items-baseline gap-2">
+                  <span className={`text-xl font-bold ${riskColor}`}>{riskLevel || 'N/A'}</span>
+                  <span className="text-xs" style={{ color: '#6b7280' }}>
+                    ({ipfsData?.riskAssessment?.riskScore ?? '--'}/100)
+                  </span>
+                </div>
               </div>
-              <p className={`text-5xl font-bold ${riskColor}`}>
-                {riskLevel || 'N/A'}
-              </p>
-            </div>
-            <div className="border border-white rounded-2xl p-6 shadow-lg">
-              <h3 className="text-lg font-semibold mb-4">Classification</h3>
-              <div className="text-2xl font-bold text-white">{ipfsData?.classification?.type || 'N/A'}</div>
-              <div className="text-sm text-gray-300">Utility: {ipfsData?.classification?.utilityScore ?? '--'}%</div>
-              <div className="text-sm text-gray-300">Meme: {ipfsData?.classification?.memeScore ?? '--'}%</div>
+              <div className="flex justify-between items-center pb-2" style={{ borderBottomColor: '#252538ff', borderBottomWidth: '1px' }}>
+                <span className="text-sm" style={{ color: '#6b7280' }}>Classification</span>
+                <span className="text-sm font-medium">{ipfsData?.classification?.type || 'N/A'}</span>
+              </div>
+              <div className="flex justify-between items-center pb-2" style={{ borderBottomColor: '#252538ff', borderBottomWidth: '1px' }}>
+                <span className="text-sm" style={{ color: '#6b7280' }}>Utility Score</span>
+                <span className="text-sm font-medium">{ipfsData?.classification?.utilityScore ?? '--'}%</span>
+              </div>
+              <div className="flex justify-between items-center pb-2" style={{ borderBottomColor: '#252538ff', borderBottomWidth: '1px' }}>
+                <span className="text-sm" style={{ color: '#6b7280' }}>Meme Score</span>
+                <span className="text-sm font-medium">{ipfsData?.classification?.memeScore ?? '--'}%</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm" style={{ color: '#6b7280' }}>Registered On</span>
+                <span className="text-sm font-medium">{new Date(parseInt(account.timestamp) * 1000).toLocaleString()}</span>
+              </div>
             </div>
           </div>
 
-          {/* Right Box: On-Chain Info */}
-          <div className="border border-white rounded-2xl p-6 shadow-lg">
-            <h3 className="text-lg font-semibold mb-4">On-Chain Information</h3>
-            <div className="space-y-3 text-sm break-words">
-              <p><strong>Mint Address:</strong> <span className="text-gray-300">{account.mint}</span></p>
-              <p><strong>Update Authority:</strong> <span className="text-gray-300">{account.authority}</span></p>
-              <p><strong>On-Chain Name:</strong> <span className="text-gray-300">{account.name}</span></p>
-              <p><strong>On-Chain Symbol:</strong> <span className="text-gray-300">{account.symbol}</span></p>
-              <p><strong>IPFS Hash:</strong> <span className="text-gray-300">{account.ipfsHash}</span></p>
-              <p><strong>Registered On:</strong> <span className="text-gray-300">{new Date(parseInt(account.timestamp) * 1000).toLocaleString()}</span></p>
+          {/* Token Information Card */}
+          <div className="rounded-lg p-4" style={{ backgroundColor: '#181824', borderColor: '#252538ff', borderWidth: '1px' }}>
+            <h3 className="text-lg font-bold mb-3">Token Information</h3>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center pb-2" style={{ borderBottomColor: '#252538ff', borderBottomWidth: '1px' }}>
+                <span className="text-sm" style={{ color: '#6b7280' }}>Name</span>
+                <span className="text-sm font-medium">{account.name}</span>
+              </div>
+              <div className="flex justify-between items-center pb-2" style={{ borderBottomColor: '#252538ff', borderBottomWidth: '1px' }}>
+                <span className="text-sm" style={{ color: '#6b7280' }}>Symbol</span>
+                <span className="text-sm font-medium">{account.symbol}</span>
+              </div>
+              <div className="flex justify-between items-center pb-2" style={{ borderBottomColor: '#252538ff', borderBottomWidth: '1px' }}>
+                <span className="text-sm" style={{ color: '#6b7280' }}>Mint Address</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-mono">{account.mint.slice(0, 8)}...{account.mint.slice(-8)}</span>
+                  <button onClick={() => copyToClipboard(account.mint)} className="text-gray-400 hover:text-white">
+                    <FaCopy className="text-xs" />
+                  </button>
+                </div>
+              </div>
+              <div className="flex justify-between items-center pb-2" style={{ borderBottomColor: '#252538ff', borderBottomWidth: '1px' }}>
+                <span className="text-sm" style={{ color: '#6b7280' }}>Update Authority</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-mono">{account.authority.slice(0, 8)}...{account.authority.slice(-8)}</span>
+                  <button onClick={() => copyToClipboard(account.authority)} className="text-gray-400 hover:text-white">
+                    <FaCopy className="text-xs" />
+                  </button>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm" style={{ color: '#6b7280' }}>IPFS Hash</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-mono">{account.ipfsHash.slice(0, 12)}...{account.ipfsHash.slice(-12)}</span>
+                  <button onClick={() => copyToClipboard(account.ipfsHash)} className="text-gray-400 hover:text-white">
+                    <FaCopy className="text-xs" />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
+
+          {/* Metadata Card */}
+          {ipfsData && (
+            <div className="rounded-lg p-4" style={{ backgroundColor: '#181824', borderColor: '#252538ff', borderWidth: '1px' }}>
+              <button
+                onClick={() => setShowMetadata(!showMetadata)}
+                className="w-full flex items-center justify-between text-lg font-bold mb-3 hover:opacity-80 transition"
+              >
+                <span>IPFS Metadata</span>
+                {showMetadata ? <FaChevronUp className="text-sm" /> : <FaChevronDown className="text-sm" />}
+              </button>
+              {showMetadata && (
+                <div className="rounded p-4 overflow-x-auto" style={{ backgroundColor: '#0e0d13' }}>
+                  <pre className="text-xs" style={{ color: '#6b7280' }}>
+                    {JSON.stringify(ipfsData, null, 2)}
+                  </pre>
+                </div>
+              )}
+            </div>
+          )}
         </div>
-
-        {/* Full IPFS Metadata */}
-        {ipfsData && (
-          <div className="mt-8 border border-white rounded-2xl p-6 shadow-lg">
-            <h3 className="text-xl font-bold mb-4">Full IPFS Metadata</h3>
-            <pre className="bg-gray-800 p-4 rounded-lg text-xs overflow-x-auto">
-              {JSON.stringify(ipfsData, null, 2)}
-            </pre>
-          </div>
-        )}
       </div>
     </div>
   );

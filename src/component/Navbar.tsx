@@ -2,15 +2,23 @@ import { Link } from 'react-router-dom';
 
 function Navbar() {
   return (
-    <nav className="border border-white p-4 mb-4 flex justify-between items-center">
-      <div className="text-white text-xl">
+    <nav className="p-4 mb-4 flex justify-between items-center" style={{ backgroundColor: '#181824' }}>
+      <div className="text-white text-xl font-bold">
         <Link to="/">ChainProof</Link>
       </div>
-      <div className="flex gap-6">
-        <Link to="/send" className="text-white hover:text-gray-300">
+      <div className="flex gap-4">
+        <Link
+          to="/send"
+          className="text-white px-5 py-2 rounded-lg font-medium transition hover:opacity-80"
+          style={{ borderColor: '#35da9a', borderWidth: '1px' }}
+        >
           Send
         </Link>
-        <Link to="/register-token" className="text-white hover:text-gray-300">
+        <Link
+          to="/register-token"
+          className="text-white px-5 py-2 rounded-lg font-medium transition hover:opacity-80"
+          style={{ borderColor: '#35da9a', borderWidth: '1px' }}
+        >
           Register Token
         </Link>
       </div>
