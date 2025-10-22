@@ -25,15 +25,31 @@ export const getProvider = () => {
 export const getProgram = () => {
   const provider = getProvider();
   if (!provider) {
-    console.warn('Provider not initialized');
     return null;
   }
-  
+
   try {
     const program = new Program(idl as any, programID, provider);
     return program;
   } catch (error) {
-    console.error('Error creating program:', error);
+    return null;
+  }
+};
+
+// Read-only program instance for fetching data without wallet
+export const getReadOnlyProgram = () => {
+  try {
+    const connection = new Connection(network, opts.preflightCommitment);
+    // Create a dummy provider for read-only access
+    const dummyWallet = {
+      publicKey: PublicKey.default,
+      signTransaction: async () => { throw new Error('Read-only mode'); },
+      signAllTransactions: async () => { throw new Error('Read-only mode'); },
+    };
+    const provider = new AnchorProvider(connection, dummyWallet as any, opts);
+    const program = new Program(idl as any, programID, provider);
+    return program;
+  } catch (error) {
     return null;
   }
 };

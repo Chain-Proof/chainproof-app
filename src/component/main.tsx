@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import tokens from './tokens/token.json';
 import { useNavigate, Link } from 'react-router-dom';
-import { getProgram } from '../chainproofconnect/useProgram';
+import { getProgram, getReadOnlyProgram } from '../chainproofconnect/useProgram';
 import { FaCheckCircle, FaSearch, FaPlus } from 'react-icons/fa';
 
 interface AnalysisResult {
@@ -44,22 +44,24 @@ function Main() {
     const fetchVerifiedTokens = async () => {
       setVerifiedLoading(true);
       try {
-        const program = getProgram();
+        // Try to get wallet-connected program first, fall back to read-only
+        let program = getProgram();
         if (!program) {
-          console.warn('Program not initialized');
+          program = getReadOnlyProgram();
+        }
+
+        if (!program) {
           setVerifiedLoading(false);
           return;
         }
 
         const tokens = await (program.account as any).tokenEntry.all();
-        console.log('Fetched verified tokens:', tokens);
 
         const tokensWithIpfsData = await Promise.all(
           tokens.map(async (token: any) => {
             try {
               let fetchUrl = token.account.ipfsHash;
               if (fetchUrl && !fetchUrl.startsWith('http')) {
-                // Use Pinata gateway instead of public gateway to avoid CORS
                 fetchUrl = `https://maroon-solid-leech-193.mypinata.cloud/ipfs/${fetchUrl.replace(/^ipfs:\/\//, '')}`;
               }
 
@@ -71,7 +73,6 @@ function Main() {
               const ipfsData = await response.json();
               return { ...token, ipfsData };
             } catch (e) {
-              console.error(`Failed to fetch IPFS data for ${token.account.name}`, e);
               return { ...token, ipfsData: null };
             }
           })
@@ -79,7 +80,6 @@ function Main() {
 
         setVerifiedTokens(tokensWithIpfsData);
       } catch (error) {
-        console.error('Error fetching verified tokens:', error);
         setVerifiedTokens([]);
       } finally {
         setVerifiedLoading(false);
@@ -125,12 +125,18 @@ function Main() {
           },
           body: JSON.stringify({ tokenAddresses: tokens.map(t => t.address) }),
         });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
-        if (data.success) {
+
+        if (data.success && data.results) {
           setTokenData(data.results);
         }
       } catch (error) {
-        console.error('Error fetching token data:', error);
+        setTokenData([]);
       } finally {
         setLoading(false);
       }
