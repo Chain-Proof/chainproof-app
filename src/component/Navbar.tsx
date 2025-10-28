@@ -21,6 +21,13 @@ function Navbar() {
         >
           Register Token
         </Link>
+        <Link
+          to="/developer/dashboard"
+          className="text-white px-5 py-2 rounded-lg font-medium transition hover:opacity-80"
+          style={{ borderColor: '#35da9a', borderWidth: '1px' }}
+        >
+          Developer Console
+        </Link>
       </div>
     </nav>
   );
